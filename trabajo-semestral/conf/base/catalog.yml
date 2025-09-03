@@ -1,0 +1,260 @@
+# Catálogo de Datos para Proyecto de Machine Learning con Spotify
+# Este archivo define todos los datasets que usaremos en nuestro pipeline de Kedro
+#
+# Documentación completa: https://docs.kedro.org/en/stable/data/data_catalog.html
+#
+# Soporta múltiples tipos de almacenamiento: sistemas de archivos locales, nube, red y HDFS
+
+# =============================================================================
+# DATASETS PRINCIPALES DE SPOTIFY (Datos Crudos - 01_raw)
+# =============================================================================
+
+# Dataset de Artistas: Contiene información sobre los artistas de Spotify
+# Incluye: URI del artista, popularidad, géneros musicales y número de seguidores
+artists:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/artists.csv
+  load_args:
+    # Especificamos que la primera columna es el índice
+    index_col: 0
+  save_args:
+    # Al guardar, incluimos el índice
+    index: true
+
+# Dataset de Playlists: Información sobre las playlists de Spotify
+# Incluye: URI, nombre, descripción, consulta, autor, número de tracks y seguidores
+playlists:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/final_playlists.csv
+  load_args:
+    index_col: 0
+  save_args:
+    index: true
+
+# Dataset de Tracks: Información detallada sobre las canciones
+# Incluye: nombre, artistas, URI, popularidad, tipo de álbum, fecha de lanzamiento, etc.
+tracks:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/final_tracks.csv
+  load_args:
+    index_col: 0
+  save_args:
+    index: true
+
+# Dataset Principal: El dataset más completo que combina toda la información
+# Incluye características de audio como danceability, energy, key, loudness, etc.
+# Este será nuestro dataset principal para el machine learning
+main_dataset:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/main_dataset.csv
+  load_args:
+    index_col: 0
+  save_args:
+    index: true
+
+# =============================================================================
+# DATASETS DE REFERENCIA (Archivos de Texto)
+# =============================================================================
+
+# Lista de géneros musicales: Categorías de música disponibles en Spotify
+# Útil para análisis de géneros y clasificación
+music_genres:
+  type: text.TextDataset
+  filepath: data/01_raw/music_genres.txt
+
+# Vibes y emociones: Lista de estados de ánimo y vibraciones musicales
+# Útil para análisis de sentimientos y recomendaciones basadas en mood
+music_vibes:
+  type: text.TextDataset
+  filepath: data/01_raw/im_getting_these_vibes_uknow.txt
+
+# =============================================================================
+# DATASETS INTERMEDIOS (02_intermediate)
+# =============================================================================
+
+# Datos preprocesados de artistas: Artistas limpios y procesados
+preprocessed_artists:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/preprocessed_artists.parquet
+
+# Datos preprocesados de tracks: Canciones con características de audio procesadas
+preprocessed_tracks:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/preprocessed_tracks.parquet
+
+# Datos preprocesados de playlists: Playlists con metadatos procesados
+preprocessed_playlists:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/preprocessed_playlists.parquet
+
+# Dataset principal preprocesado: Dataset completo limpio y listo para ML
+preprocessed_main_dataset:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/preprocessed_main_dataset.parquet
+
+# =============================================================================
+# DATASETS PRIMARIOS (03_primary)
+# =============================================================================
+
+# Tabla de entrada para el modelo: Datos finales preparados para machine learning
+# Incluye todas las características (features) necesarias para entrenar el modelo
+model_input_table:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/model_input_table.parquet
+
+# Características de audio procesadas: Features de audio normalizadas y escaladas
+audio_features:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/audio_features.parquet
+
+# Metadatos de canciones: Información adicional sobre tracks procesada
+track_metadata:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/track_metadata.parquet
+
+# =============================================================================
+# DATASETS DE CARACTERÍSTICAS (04_feature)
+# =============================================================================
+
+# Características de audio: Features extraídas y procesadas para el modelo
+audio_features_engineered:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/audio_features_engineered.parquet
+
+# Características de popularidad: Métricas de popularidad procesadas
+popularity_features:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/popularity_features.parquet
+
+# Características de géneros: Géneros musicales codificados y procesados
+genre_features:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/genre_features.parquet
+
+# =============================================================================
+# DATASETS DE ENTRADA DEL MODELO (05_model_input)
+# =============================================================================
+
+# Datos de entrenamiento: Conjunto de datos para entrenar el modelo
+train_data:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/train_data.parquet
+
+# Datos de validación: Conjunto para validar el modelo durante el entrenamiento
+validation_data:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/validation_data.parquet
+
+# Datos de prueba: Conjunto para evaluar el rendimiento final del modelo
+test_data:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/test_data.parquet
+
+# =============================================================================
+# MODELOS ENTRENADOS (06_models)
+# =============================================================================
+
+# Modelo de recomendación: Modelo entrenado para recomendar música
+recommendation_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/recommendation_model.pickle
+  versioned: true
+
+# Modelo de clasificación de géneros: Modelo para clasificar géneros musicales
+genre_classifier:
+  type: pickle.PickleDataset
+  filepath: data/06_models/genre_classifier.pickle
+  versioned: true
+
+# Modelo de predicción de popularidad: Modelo para predecir popularidad de canciones
+popularity_predictor:
+  type: pickle.PickleDataset
+  filepath: data/06_models/popularity_predictor.pickle
+  versioned: true
+
+# =============================================================================
+# SALIDAS DEL MODELO (07_model_output)
+# =============================================================================
+
+# Predicciones de recomendaciones: Resultados del modelo de recomendación
+recommendation_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/recommendation_predictions.parquet
+
+# Predicciones de géneros: Clasificaciones de géneros musicales
+genre_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/genre_predictions.parquet
+
+# Predicciones de popularidad: Predicciones de popularidad de canciones
+popularity_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/popularity_predictions.parquet
+
+# Métricas del modelo: Evaluación del rendimiento de los modelos
+model_metrics:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/model_metrics.parquet
+
+# =============================================================================
+# REPORTES Y VISUALIZACIONES (08_reporting)
+# =============================================================================
+
+# Gráfico de distribución de géneros: Visualización de géneros musicales
+genre_distribution_plot:
+  type: plotly.PlotlyDataset
+  filepath: data/08_reporting/genre_distribution_plot.json
+  versioned: true
+  plotly_args:
+    type: bar
+    fig:
+      x: genre
+      y: count
+      orientation: v
+    layout:
+      xaxis_title: "Géneros Musicales"
+      yaxis_title: "Número de Canciones"
+      title: "Distribución de Géneros Musicales en Spotify"
+
+# Gráfico de características de audio: Visualización de features de audio
+audio_features_plot:
+  type: plotly.PlotlyDataset
+  filepath: data/08_reporting/audio_features_plot.json
+  versioned: true
+  plotly_args:
+    type: scatter
+    fig:
+      x: danceability
+      y: energy
+      color: valence
+      size: popularity
+    layout:
+      xaxis_title: "Bailabilidad"
+      yaxis_title: "Energía"
+      title: "Relación entre Bailabilidad, Energía y Valence"
+
+# Matriz de confusión: Evaluación del modelo de clasificación
+confusion_matrix_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/08_reporting/confusion_matrix.png
+  versioned: true
+
+# Gráfico de popularidad por año: Tendencias de popularidad temporal
+popularity_trends_plot:
+  type: plotly.PlotlyDataset
+  filepath: data/08_reporting/popularity_trends_plot.json
+  versioned: true
+  plotly_args:
+    type: line
+    fig:
+      x: release_year
+      y: avg_popularity
+    layout:
+      xaxis_title: "Año de Lanzamiento"
+      yaxis_title: "Popularidad Promedio"
+      title: "Tendencias de Popularidad por Año"
+
+# Reporte de métricas del modelo: Resumen de rendimiento
+model_performance_report:
+  type: text.TextDataset
+  filepath: data/08_reporting/model_performance_report.txt
