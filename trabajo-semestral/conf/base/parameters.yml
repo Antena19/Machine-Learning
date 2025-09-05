@@ -1,0 +1,60 @@
+# Parámetros de configuración para el proyecto de recomendación musical
+
+# Configuración de división de datos
+data_splitting:
+  test_size: 0.2
+  validation_size: 0.1
+  random_state: 42
+
+# Configuración de modelos
+models:
+  recommendation:
+    n_clusters: 10
+    random_state: 42
+    
+  genre_classifier:
+    n_estimators: 100
+    max_depth: 10
+    min_samples_split: 5
+    random_state: 42
+    
+  popularity_predictor:
+    n_estimators: 100
+    max_depth: 15
+    min_samples_split: 5
+    random_state: 42
+
+# Configuración de características de audio
+audio_features:
+  - danceability
+  - energy
+  - valence
+  - tempo
+  - acousticness
+  - instrumentalness
+  - liveness
+  - speechiness
+  - loudness
+
+# Configuración de géneros principales
+main_genres:
+  - pop
+  - rock
+  - hip hop
+  - electronic
+  - jazz
+  - classical
+  - country
+  - r&b
+
+# Configuración de visualizaciones
+visualizations:
+  max_samples: 1000
+  figure_size: [12, 8]
+  dpi: 300
+
+# Configuración de reportes
+reporting:
+  include_examples: true
+  save_plots: true
+  generate_summary: true
