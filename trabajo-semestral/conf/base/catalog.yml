@@ -267,18 +267,3 @@ model_performance_report:
 temporal_features:
   type: pandas.ParquetDataset
   filepath: data/04_feature/temporal_features.parquet
-
-# Predicciones de recomendaciones: Resultados del modelo de recomendación
-recommendation_predictions:
-  type: pandas.ParquetDataset
-  filepath: data/07_model_output/recommendation_predictions.parquet
-
-# Predicciones de géneros: Clasificaciones de géneros musicales
-genre_predictions:
-  type: pandas.ParquetDataset
-  filepath: data/07_model_output/genre_predictions.parquet
-
-# Predicciones de popularidad: Predicciones de popularidad de canciones
-popularity_predictions:
-  type: pandas.ParquetDataset
-  filepath: data/07_model_output/popularity_predictions.parquet
